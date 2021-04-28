@@ -1,6 +1,4 @@
 git 
-CL251KA
-CLcl
 注：配合linux的使用体验，体感十足
 
 
