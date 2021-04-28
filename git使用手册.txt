@@ -1,0 +1,48 @@
+git 
+CL251KA
+CLcl
+注：配合linux的使用体验，体感十足
+
+
+SSH：git@github.com:CL251KA/my-note.git
+
+https://github.com/CL251KA/my-note.git
+
+--克隆项目到本地
+git clone 
+--git绑定远程仓库
+git remote add origin git://github.com/CL251KA/my-note.git
+--git从远程仓库拉取内容到本地
+git pull --rebase origin main
+--git提交本地内容到远程仓库
+git push -u origin main
+
+(git网络连接出错超时需要验证解决方法：修改设置)
+取消全局代理：
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+取消SSL验证：
+git config --global http.sslVerify "false"
+(git提交时总是需要输入账号密码登录解决方法：有可能是库地址用了https的了，换一下就好)
+$ git remote -v 			查看库地址 git@一般没问题，https要换
+$ git remote rm origin 		删除此时库地址
+$ git remote add origin 	git@github.com:CL251KA/my-note.git
+$ git push origin main 		(main是我的分支名) 提交修改
+
+
+常规操作：
+git init 初始化仓库(创建文件夹)
+git add 添加文件到暂存区
+git commit 提交文件到存储区
+git pull --rebase origin main 从远程仓库的 main分支 拷贝项目到本地
+git push origin main 提交文件到远程库的 main 分支
+(补充：
+git pull=git fetch + git merge
+git pull --rebase=git fetch+git rebase
+看完还是感觉merge比较好，会保留分支分叉情况，rebase留下的是线性分支)
+
+git branch 查看分支
+git branch XXX 创建名为XXX的分支
+git checkout xxx 切换到XXX分支
+git branch -d <branch_name>  .#删除一个干净的分支(即相对当前分支而言该分支没有新的提交记录)
+git branch -D <branch_name>  .#强制删除一个分支，该分支有没有合并到当前分支的提交记录
