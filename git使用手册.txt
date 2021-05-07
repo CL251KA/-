@@ -1,6 +1,6 @@
 git 
 注：配合linux的使用体验，体感十足
---142857这个数字到底有什么秘密？
+--142857这个数字到底有什么秘密???
 
 SSH：git@github.com:CL251KA/my-note.git
 
