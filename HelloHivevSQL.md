@@ -330,3 +330,11 @@ Row_number()函数可以跟开窗，好用
 ![1619511376529](HelloHive.assets/1619511376529.png)
 
 漂亮的去重留一。
+
+```sql
+-- mysql语法，分组留最小值
+select * from (select * from student group by Ssex,SId order by SId asc ) t group by t.Ssex;
+-- mysql语法，分组留最大值
+select * from (select * from student group by Ssex,SId order by SId desc ) t group by t.Ssex;
+```
+
