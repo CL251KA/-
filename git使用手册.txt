@@ -44,3 +44,7 @@ git branch XXX 创建名为XXX的分支
 git checkout xxx 切换到XXX分支
 git branch -d <branch_name>  .#删除一个干净的分支(即相对当前分支而言该分支没有新的提交记录)
 git branch -D <branch_name>  .#强制删除一个分支，该分支有没有合并到当前分支的提交记录
+git 删除文件(文件夹)
+git rm -r --cached HelloHivevSQL.md  #--cached不会把本地的HelloHivevSQL.md 删除
+git commit -m '删个多余的文件'
+git push -u origin main
