@@ -338,3 +338,7 @@ select * from (select * from student group by Ssex,SId order by SId asc ) t grou
 select * from (select * from student group by Ssex,SId order by SId desc ) t group by t.Ssex;
 ```
 
+## 9.Left Join = Left Outer Join
+
+这两个是等价的，left join 只是简称，实际使用起来效果没差别的。只是平时没见过用left outer join的，突然看到有点懵。
+
