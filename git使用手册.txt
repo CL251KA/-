@@ -48,3 +48,8 @@ git 删除文件(文件夹)
 git rm -r --cached HelloHivevSQL.md  #--cached不会把本地的HelloHivevSQL.md 删除
 git commit -m '删个多余的文件'
 git push -u origin main
+
+git add指令
+git add -A 添加所有变化
+git add .  添加所有修改、新建的文件，不包括删除的
+git add -u 添加所有修改和被删除的文件，不包括新建的
