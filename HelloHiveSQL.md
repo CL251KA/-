@@ -342,3 +342,22 @@ select * from (select * from student group by Ssex,SId order by SId desc ) t gro
 
 这两个是等价的，left join 只是简称，实际使用起来效果没差别的。只是平时没见过用left outer join的，突然看到有点懵。
 
+## 10.Hive 动态分区
+
+开启Hive动态分区的指令：
+
+```shell
+--第一条指令开启动态分区
+set hive.exec.dynamici.partition=true;
+--第二条指令关闭严格模式，允许所有分区都为动态，否则无法正常使用(系统会提示你关闭严格模式)
+set hive.exec.dynamic.partition.mode=nonstrict;
+--第三条指令确定每个mapper或者reducer可以创建的最大动态分区的个数
+set hive.exec.max.dynamic.partitions.pernode=100
+--第四条指令指定一条动态分区创建语句可以创建的最大动态分区的个数
+set hive.exec.max.dynamic.partitions=1000;
+--第五条指令指定全局可以创建的最大文件的个数
+set hive.exec.max.created.files=100000;
+```
+
+为什么要开启动态分区：静态分区就是用户手动指定分区字段的值，这样在SQL运行时就可以直接拿到改分区的字段，但是如果需要拿到很多分区的结果的时候，这样就很麻烦，所以需要开启动态分区，这样不需要用户指定分区的值，系统自动根据分区的值将结果查询出来。
+
