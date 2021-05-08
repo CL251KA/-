@@ -53,3 +53,23 @@ git add指令
 git add -A 添加所有变化
 git add .  添加所有修改、新建的文件，不包括删除的
 git add -u 添加所有修改和被删除的文件，不包括新建的
+
+首先解释一下LF和CRLF的意思吧。CR代表的是回车符“\r”，LF代表的是换行符“\n”，在Windows下的换行符为CRLF，也就是说Windows中换行是回车符和换行符来结束一行，而linux和MAX OS下换行符只是一个字符LF。
+
+假如你正在Windows上写程序，又或者你正在和其他人合作，他们在Windows上编程，而你却在其他系统上，在这些情况下，你可能会遇到行尾结束符问题，虽然这是小问题，但它会极大地扰乱跨平台协作。
+
+core.autocrlf
+
+使用命令git config --global core.autocrlf true    Git会在你提交时自动把行结束符CRLF转换成LF，在签出代码时把LF转换成CRLF。所以在Windows系统上，你可以使用这个命令，这样在签出代码时候，LF会被转换成CRLF。
+
+使用命令git  config --global core.autocrlf input  Git会在提交时把CRLF转换成LF，而在签出时候不转换 。所以这个命令适合在Linux或者MAC系统中，当一个以CRLF为行结束符文件不小心被引入的时候，你能使用这个命令，让Git帮你修正。
+
+如果你是Windows程序员，并且正在开发仅运行在Windows上的项目，可以设置为“false”。
+
+core.safecrlf
+
+git config --global core.safecrlf true 这个命令表示拒绝提交包含混合换行符的文件
+
+git config --global core.safecrlf  false 允许提交包含混合换行符的文件
+
+git config --global core.safecrlf  warn  提交包含混合换行符的文件时给出警告
