@@ -1,0 +1,13 @@
+app_drug_list|sid
+app_plan_browse_record|sid
+app_plan_info|sid
+app_plan_insured|sid
+app_plan_mode_real_info|sid
+app_plan_model_info|sid
+app_plan_model_ldcode|sid
+app_plan_model_style|sid
+app_plan_risk_duty|sid
+app_plan_risk_info|sid
+app_plan_risk_mode|sid
+app_plan_risk_params|sid
+app_plan_share_records|sid

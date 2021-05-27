@@ -1,0 +1,22 @@
+#!/bin/sh
+export SQOOP_HOME=/usr/share/sqoop-1.4.4
+hostname="192.168.1.199"
+user="root"
+password="root"
+database="test"
+table="tags"
+curr_max=0
+function db_to_hive(){
+${SQOOP_HOME}/bin/sqoop import --connect jdbc:mysql://${hostname}/${database} --username ${user} --password ${password}  --table ${table}   --split-by docid --hive-import --hive-table lan.ding --fields-terminated-by '\t' --incremental  append  --check-column docid --last-value ${curr_max} result=`mysql -h${hostname} -u${user} -p${password} ${database}<<EOF select max(docid) from ${table};
+EOF`
+curr_max=`echo $result |awk '{print $2}'`
+}
+ 
+if [ $# -eq 0 ];then
+    while true
+ do
+      db_to_hive
+      sleep 120
+    done
+    exit
+fi

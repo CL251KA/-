@@ -1,0 +1,31 @@
+done
+
+for i in `cat p01_app_order.txt`
+do
+        echo $i > ${log}
+        tablename=`awk -F '|' '{print $1}' ${log}`
+    rowkey=`awk -F '|' '{print $2}' ${log}`
+        echo "p01 =>" $tablename
+        echo "p01 =>" $rowkey
+        sqoop import -D sqoop.hbase.add.row.key=true --connect jdbc:postgresql://10.0.11.125:30038/app_order  --username postgres --password root123456 --m 1 --query "select a.*,now()::timestamp(0)without time zone as etl_loadtime,'c' update_in_flag from $tablename as a where \$CONDITIONS" --hbase-table p01:$tablename --hbase-row-key $rowkey --column-family cf  --hbase-create-table
+done
+
+for i in `cat p01_app_trans2lis.txt`
+do
+        echo $i > ${log}
+        tablename=`awk -F '|' '{print $1}' ${log}`
+    rowkey=`awk -F '|' '{print $2}' ${log}`
+        echo "p01 =>" $tablename
+        echo "p01 =>" $rowkey
+        sqoop import -D sqoop.hbase.add.row.key=true --connect jdbc:postgresql://10.0.11.125:30038/app_trans2lis  --username postgres --password root123456 --m 1 --query "select a.*,now()::timestamp(0)without time zone as etl_loadtime,'c' update_in_flag from $tablename as a where \$CONDITIONS" --hbase-table p01:$tablename --hbase-row-key $rowkey --column-family cf  --hbase-create-table
+done
+
+for i in `cat p01_app_usercenter.txt`
+do
+        echo $i > ${log}
+        tablename=`awk -F '|' '{print $1}' ${log}`
+    rowkey=`awk -F '|' '{print $2}' ${log}`
+        echo "p01 =>" $tablename
+        echo "p01 =>" $rowkey
+        sqoop import -D sqoop.hbase.add.row.key=true --connect jdbc:postgresql://10.0.11.125:30038/app_usercenter  --username postgres --password root123456 --m 1 --query "select a.*,now()::timestamp(0)without time zone as etl_loadtime,'c' update_in_flag from $tablename as a where \$CONDITIONS" --hbase-table p01:$tablename --hbase-row-key $rowkey --column-family cf  --hbase-create-table
+done
