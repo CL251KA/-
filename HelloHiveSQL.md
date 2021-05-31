@@ -361,3 +361,66 @@ set hive.exec.max.created.files=100000;
 
 为什么要开启动态分区：静态分区就是用户手动指定分区字段的值，这样在SQL运行时就可以直接拿到改分区的字段，但是如果需要拿到很多分区的结果的时候，这样就很麻烦，所以需要开启动态分区，这样不需要用户指定分区的值，系统自动根据分区的值将结果查询出来。
 
+## 11.union all 和 or
+
+因为union自带去重效果所以先不考虑
+
+关于这两者哪个执行效率高，网上说什么的都有，所以我回来就写几个DEMO试一下。先说在MySQL中测试的结果：实际执行的时候or的效率远高于union all，查看执行计划发现，union all查询了两次，所以几乎耗时是or的两倍。然后此时又顺手测了一下group by 和 over(partition by)，结果说明开窗是真的香。
+
+Hive：
+
+```SQL
+--1
+select l.branchmanager ,avg(l.agentgroup) from ms_ods_cms.labranchgroup l group by l.branchmanager having l.branchmanager = '8611001188' or l.branchmanager = '8611001411';
+--2
+select l.branchmanager ,avg(l.agentgroup) over(partition by l.branchmanager) from ms_ods_cms.labranchgroup l where l.branchmanager = '8611001188' or l.branchmanager = '8611001411';
+--3
+select l.branchmanager ,avg(l.agentgroup) from ms_ods_cms.labranchgroup l group by l.branchmanager having l.branchmanager = '8611001188' 
+union all 
+select l.branchmanager ,avg(l.agentgroup) from ms_ods_cms.labranchgroup l group by l.branchmanager having l.branchmanager = '8611001411';
+--4
+select l.branchmanager ,avg(l.agentgroup) over(partition by l.branchmanager) from ms_ods_cms.labranchgroup l where l.branchmanager = '8611001188' 
+union all 
+select l.branchmanager ,avg(l.agentgroup) over(partition by l.branchmanager) from ms_ods_cms.labranchgroup l where l.branchmanager = '8611001411';
+```
+
+因为DBeaver要开启设置才能同时运行多条用`;`分割的SQL，但是会看不到后面的查询的耗时，所以这里跑了四次，然后尽量多跑几次保证结果正确。
+
+(耗时单位：s)
+
+结果一：20.146,20.306,20.160
+
+结果二：19.274,21.250,20.390
+
+结果三：53.137,52.931,54.257
+
+结果四：54.968,52.466,54.254
+
+结果证明 对本次查询来说 or 的效率要优于 union all 。但开窗的优势就看不出来了？怎么放大差距？遂，又有了四次实验(不过滤了)：
+
+```SQL
+--1
+select l.branchmanager ,avg(l.agentgroup) from ms_ods_cms.labranchgroup l group by l.branchmanager;
+--2
+select l.branchmanager ,avg(l.agentgroup) over(partition by l.branchmanager) from ms_ods_cms.labranchgroup l;
+--3
+select l.branchmanager ,avg(l.agentgroup) from ms_ods_cms.labranchgroup l group by l.branchmanager
+union all 
+select l.branchmanager ,avg(l.agentgroup) from ms_ods_cms.labranchgroup l group by l.branchmanager;
+--4
+select l.branchmanager ,avg(l.agentgroup) over(partition by l.branchmanager) from ms_ods_cms.labranchgroup l 
+union all 
+select l.branchmanager ,avg(l.agentgroup) over(partition by l.branchmanager) from ms_ods_cms.labranchgroup l;
+```
+
+(耗时单位：s)
+
+结果一：19.524，20.981，20.360
+
+结果二：20.560，22.206，20.255
+
+结果三：57.798，54.720，53.858
+
+结果四：55.136，56.645，55.230
+
+结论：我测了个寂寞，数据量太小，压根体现不出差距。以后有机会找一张10G以上的表试一试吧。
